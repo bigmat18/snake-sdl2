@@ -1,5 +1,6 @@
 #include <stdio.h>   
 #include <stdbool.h>
+#include <stdlib.h>
 #include <SDL2/SDL.h>
 
 #define SCREEN_WIDTH 500
@@ -11,14 +12,12 @@
 #define CELL_WIDTH ((SCREEN_WIDTH / BOARD_WIDTH))
 #define CELL_HEIGHT ((SCREEN_HEIGTH / BOARD_HEIGHT))
 
-#define FOOD_COUNT 1
-
 
 // ------------------------
 // STRUCT DEFINITION
 
 typedef enum {
-    DIR_RIGHT = 0,
+    DIR_RIGHT,
     DIR_UP,
     DIR_LEFT,
     DIR_DOWN,
@@ -29,13 +28,13 @@ typedef struct {
     int y;
 } Pos, Food;
 
-typedef struct body {
+typedef struct Body {
     Pos pos;
-    struct body *nextBody;
+    struct Body *nextBody;
 } Snake;
 
 typedef struct {
-    Food food[FOOD_COUNT];
+    Food food;
     bool quit;
     Snake snake;
     int gameSpeed;
@@ -53,12 +52,17 @@ Game GAME = {false};
 void scc(int code);
 void *scp(void *ptr);
 
+void renderGame(SDL_Renderer *renderer, Game *game);
+void renderSnake(SDL_Renderer *renderer, Game *game);
+void renderFood(SDL_Renderer *renderer, Game *game);
+void renderSquare(SDL_Renderer *renderer, Pos position, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+
 void initGame(Game *game);
 void initSnake(Game *game);
 void initFood(Game *game);
 
-Pos getRandomBoardPosition();
-Pos getRandomBoardPosition();
+Pos getRandomBoardPosition(Game *game);
+Pos getRandomPosition();
 int getRandomInt(int max, int min);
 
 // ------------------------
@@ -79,8 +83,9 @@ void *scp(void *ptr){
     return ptr;
 }
 
-Pos getRandomBoardPosition(){
+Pos getRandomBoardPosition(Game *game){
     Pos pos = getRandomPosition();
+    return pos;
 }
 
 Pos getRandomPosition(){
@@ -91,16 +96,17 @@ Pos getRandomPosition(){
     return newPosition;
 }
 
-int getRandomInt(int max, int min) { return (rand() % (max - min)) + min; }
+int getRandomInt(int min, int max) { return rand() % (max + 1 - min) + min; }
 
 // ------------------------
 // GAME LOGIC FUNCTION
 void initGame(Game *game) {
     game->quit = false;
+    initSnake(game);
 }
 
 void initSnake(Game *game) {
-    game->snake.pos = getRandomBoardPosition();
+    game->snake.pos = getRandomBoardPosition(game);
     game->snake.nextBody = NULL;
 }
 
@@ -111,17 +117,43 @@ void initFood(Game *game) {}
 // ------------------------
 // RENDER FUNCTION
 void renderGame(SDL_Renderer *renderer, Game *game){
-    render_food(renderer, game);
+    scc(SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255));
+    SDL_RenderClear(renderer);
+
+    renderFood(renderer, game);
+    renderSnake(renderer, game);
+
+    SDL_RenderPresent(renderer);
 }
 
-void renderFood(SDL_Renderer *renderer, Game *game){
+void renderFood(SDL_Renderer *renderer, Game *game){}
+
+void renderSnake(SDL_Renderer *renderer, Game *game){
+    renderSquare(renderer, game->snake.pos, 0, 255, 0, 255);
+
+    struct Body *currentBody = game->snake.nextBody;
+    while(currentBody){
+        renderSquare(renderer, currentBody->pos, 0, 255, 0, 255);
+        currentBody = currentBody->nextBody;
+    }
 }
 
+void renderSquare(SDL_Renderer *renderer, Pos position, Uint8 r, Uint8 g, Uint8 b, Uint8 a){
+    scc(SDL_SetRenderDrawColor(renderer, r, g, b, a));
 
+    SDL_Rect rect = {
+        (int)floorf(position.x * CELL_WIDTH),
+        (int)floorf(position.y * CELL_HEIGHT),
+        (int)floorf(CELL_WIDTH),
+        (int)floorf(CELL_HEIGHT),
+    };
+
+    scc(SDL_RenderFillRect(renderer, &rect));
+}
 
 // ------------------------
-
 int main(void){
+    srand(time(NULL));
     SDL_Init(SDL_INIT_VIDEO);
     
     SDL_Window *const window = scp(SDL_CreateWindow("Snake Game", 0, 0, SCREEN_WIDTH, SCREEN_HEIGTH, SDL_WINDOW_RESIZABLE));
@@ -135,20 +167,12 @@ int main(void){
         SDL_Event event;
 
         if(SDL_PollEvent(&event)){
-            switch(event.type){
-                case SDL_QUIT: {
-                    GAME.quit = true;
-                    break;
-                }
-            }
+            
+            if(event.type == SDL_QUIT)
+                GAME.quit = true;
         }
         
-        SDL_RenderClear(renderer);
-
-        // Update game/renderer
-        scc(SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255));
-
-        SDL_RenderPresent(renderer);
+        renderGame(renderer, &GAME);
     }
 
     return 0;
