@@ -71,6 +71,7 @@ void initFood(Game *game);
 
 void setSnakeState(Game *game, State newState);
 void updateSnakePosition(Game *game);
+bool isSnakeMovementAllowed(Game *game);
 
 Pos getRandomBoardPosition(Game *game);
 Pos getRandomPosition();
@@ -95,7 +96,25 @@ void *scp(void *ptr){
 }
 
 Pos getRandomBoardPosition(Game *game){
-    Pos pos = getRandomPosition();
+
+    bool posFree = true;
+    Pos pos = {0};
+    do{
+        pos = getRandomPosition();
+
+        if(pos.x == game->food.x && pos.y == game->food.y) posFree = false;
+        else posFree = true;
+        
+        struct Snake *currentBody = &(game->snake);
+        while(posFree && currentBody){
+
+            if (currentBody->pos.x == pos.x && currentBody->pos.y == pos.y)
+                posFree = false;
+
+            currentBody = currentBody->nextBody;
+        }
+    }while(!posFree);
+
     return pos;
 }
 
@@ -113,17 +132,19 @@ int getRandomInt(int min, int max) { return rand() % (max + 1 - min) + min; }
 // GAME LOGIC FUNCTION
 void initGame(Game *game) {
     game->quit = false;
+    game->gameSpeed = MAX_SNAKE_MOVEMENT;
+
     initSnake(game);
+    initFood(game);
 }
 
 void initSnake(Game *game) {
     game->snake.pos = getRandomBoardPosition(game);
     game->snake.nextBody = NULL;
     game->snake.state = IDLE;
-    game->gameSpeed = MAX_SNAKE_MOVEMENT;
 }
 
-void initFood(Game *game) {}
+void initFood(Game *game) { game->food = getRandomBoardPosition(game); }
 
 void setSnakeState(Game *game, State newState) {
     State oldState;
@@ -205,11 +226,14 @@ void renderGame(SDL_Renderer *renderer, Game *game){
 
     renderFood(renderer, game);
     renderSnake(renderer, game);
+    renderFood(renderer, game);
 
     SDL_RenderPresent(renderer);
 }
 
-void renderFood(SDL_Renderer *renderer, Game *game){}
+void renderFood(SDL_Renderer *renderer, Game *game){
+    renderSquare(renderer, game->food, 255, 0, 0, 255);
+}
 
 void renderSnake(SDL_Renderer *renderer, Game *game){
     struct Snake *currentBody = &(game->snake);
@@ -278,7 +302,7 @@ int main(void){
         }
         if(isSnakeMovementAllowed(&GAME))
             updateSnakePosition(&GAME);
-            
+
         renderGame(renderer, &GAME);
     }
 
