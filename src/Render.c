@@ -1,5 +1,5 @@
-#include "Render.h"
-#include "Utils.h"
+#include "headers/Render.h"
+#include "headers/Utils.h"
 
 #ifndef CELL_WIDTH
 

@@ -1,6 +1,6 @@
-#include "Render.h"
-#include "Utils.h"
-#include "Game.h"
+#include "headers/Render.h"
+#include "headers/Utils.h"
+#include "headers/Game.h"
 
 #include <time.h>
 #include <sys/time.h>

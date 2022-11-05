@@ -1,10 +1,10 @@
 #include <stdio.h>   
 #include <SDL2/SDL.h>
 
-#include "Struct.h"
-#include "Render.h"
-#include "Utils.h"
-#include "Game.h"
+#include "headers/Struct.h"
+#include "headers/Render.h"
+#include "headers/Utils.h"
+#include "headers/Game.h"
 
 #define SCREEN_WIDTH 500
 #define SCREEN_HEIGHT 500
