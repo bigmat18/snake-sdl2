@@ -1,23 +1,11 @@
 #include <stdio.h>   
 #include <SDL2/SDL.h>
 
+#include "headers/Constants.h"
 #include "headers/Struct.h"
 #include "headers/Render.h"
 #include "headers/Utils.h"
 #include "headers/Game.h"
-
-#define SCREEN_WIDTH 500
-#define SCREEN_HEIGHT 500
-
-#define BOARD_WIDTH 20
-#define BOARD_HEIGHT 20
-
-#define CELL_WIDTH ((SCREEN_WIDTH / BOARD_WIDTH))
-#define CELL_HEIGHT ((SCREEN_HEIGHT / BOARD_HEIGHT))
-
-#define MAX_SNAKE_MOVEMENT 0.18
-#define MIN_SNAKE_MOVEMENT 0.06
-#define STEP_SNAKE_MOVEMENT 0.02
 
 
 Game GAME = {false};

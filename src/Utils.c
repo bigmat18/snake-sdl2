@@ -1,14 +1,8 @@
 #include "headers/Render.h"
 #include "headers/Utils.h"
+#include "headers/Constants.h"
+
 #include <stdbool.h>
-
-#ifndef BOARD_WIDTH
-#define BOARD_WIDTH 20
-#endif
-
-#ifndef BOARD_HEIGHT
-#define BOARD_HEIGHT 20
-#endif
 
 void scc(int code){
     if(code < 0){

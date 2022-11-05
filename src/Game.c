@@ -1,35 +1,11 @@
 #include "headers/Render.h"
 #include "headers/Utils.h"
 #include "headers/Game.h"
+#include "headers/Constants.h"
 
 #include <time.h>
 #include <sys/time.h>
 #include <stdbool.h>
-
-#ifndef CELL_WIDTH
-#define SCREEN_WIDTH 500
-#define BOARD_WIDTH 20
-#define CELL_WIDTH ((SCREEN_WIDTH / BOARD_WIDTH))
-#endif
-
-#ifndef CELL_HEIGHT
-#define SCREEN_HEIGHT 500
-#define BOARD_HEIGHT 20
-#define CELL_HEIGHT ((SCREEN_HEIGHT / BOARD_HEIGHT))
-#endif
-
-#ifndef MAX_SNAKE_MOVEMENT
-#define MAX_SNAKE_MOVEMENT 0.18
-#endif
-
-#ifndef MIN_SNAKE_MOVEMENT
-#define MIN_SNAKE_MOVEMENT 0.06
-#endif
-
-#ifndef STEP_SNAKE_MOVEMENT
-#define STEP_SNAKE_MOVEMENT 0.02
-#endif
-
 
 
 void initGame(Game *game) {
