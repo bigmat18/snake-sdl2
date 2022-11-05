@@ -4,7 +4,7 @@
 
 
 void renderGame(SDL_Renderer *renderer, Game *game){
-    scc(SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255));
+    scc(SDL_SetRenderDrawColor(renderer, HEX_COLOR(BACKGROUND_COLOR)));
     SDL_RenderClear(renderer);
 
     renderSnake(renderer, game);
@@ -14,12 +14,12 @@ void renderGame(SDL_Renderer *renderer, Game *game){
 }
 
 void renderFood(SDL_Renderer *renderer, Game *game){
-    renderSquare(renderer, game->food, 255, 0, 0, 255);
+    renderSquare(renderer, game->food, HEX_COLOR(FOOD_COLOR));
 }
 
 void renderSnake(SDL_Renderer *renderer, Game *game){
     for(int i=0; i<game->snakeLength; i++)
-        renderSquare(renderer, game->snake[i].pos, 0, 255, 0, 255);
+        renderSquare(renderer, game->snake[i].pos, HEX_COLOR(SNAKE_COLOR));
 }
 
 void renderSquare(SDL_Renderer *renderer, Pos position, Uint8 r, Uint8 g, Uint8 b, Uint8 a){
