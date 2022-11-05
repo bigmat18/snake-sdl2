@@ -16,7 +16,7 @@
 
 #define MAX_SNAKE_MOVEMENT 0.18
 #define MIN_SNAKE_MOVEMENT 0.06
-#define STEP_SNAKE_MOVEMENT 0.03
+#define STEP_SNAKE_MOVEMENT 0.02
 
 
 // ------------------------
@@ -133,6 +133,7 @@ int getRandomInt(int min, int max) { return rand() % (max + 1 - min) + min; }
 void initGame(Game *game) {
     game->quit = false;
     game->gameSpeed = MAX_SNAKE_MOVEMENT;
+    game->score = 0;
 
     initSnake(game);
     initFood(game);
@@ -215,6 +216,51 @@ bool isSnakeMovementAllowed(Game *game){
         return true;
     }
 
+}
+
+bool hasSnakeCollidedFood(Game *game){
+    return game->snake.pos.x == game->food.x && game->snake.pos.y == game->food.y;
+}
+
+void updateGameAfterCollision(Game *game){
+    game->food = getRandomBoardPosition(game);
+    game->score++;
+
+    if (game->gameSpeed -= STEP_SNAKE_MOVEMENT >= MIN_SNAKE_MOVEMENT)
+        game->gameSpeed -= STEP_SNAKE_MOVEMENT;
+
+    struct Snake *currentBody = &(game->snake);
+    while (currentBody->nextBody){
+        currentBody = currentBody->nextBody;
+    }
+
+    int newBodyX = currentBody->pos.x;
+    int newBodyY = currentBody->pos.y;
+
+    switch(currentBody->state){
+        case MOVING_RIGHT:{
+            newBodyX --;
+            break;
+        }
+        case MOVING_LEFT: {
+            newBodyX ++;
+            break;
+        }
+        case MOVING_DOWN: {
+            newBodyY--;
+            break;
+        }
+        case MOVING_UP: {
+            newBodyY++;
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+    Pos newPos = {newBodyX, newBodyY};
+    struct Snake newBody = {newPos, currentBody->state, NULL};
+    currentBody->nextBody = &newBody;
 }
 
 
@@ -302,6 +348,9 @@ int main(void){
         }
         if(isSnakeMovementAllowed(&GAME))
             updateSnakePosition(&GAME);
+
+        if(hasSnakeCollidedFood(&GAME))
+            updateGameAfterCollision(&GAME);
 
         renderGame(renderer, &GAME);
     }
