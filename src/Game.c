@@ -18,55 +18,51 @@ void initGame(Game *game) {
 }
 
 void initSnake(Game *game) {
-    game->snake.pos = getRandomBoardPosition(game);
-    game->snake.nextBody = NULL;
-    game->snake.state = IDLE;
+    game->snake[0].pos = getRandomBoardPosition(game);
+    game->snake[0].state = IDLE;
+    game->snakeLength = 1;
 }
 
 void initFood(Game *game) { game->food = getRandomBoardPosition(game); }
 
 void setSnakeState(Game *game, State newState) {
     State oldState;
-    struct Snake *currentBody = &(game->snake);
 
-    while(currentBody){
-        oldState = currentBody->state;
-        currentBody->state = newState;
+    for(int i=0; i<game->snakeLength; i++){
+        oldState = game->snake[i].state;
+        game->snake[i].state = newState;
         newState = oldState;
-        currentBody = currentBody->nextBody;
     }
 }
 
 void updateSnakePosition(Game *game) {
-    struct Snake *currentBody = &(game->snake);
 
-    while (currentBody){
-        switch(currentBody->state){
+    for(int i=0; i<game->snakeLength; i++){
+        switch(game->snake[i].state){
             case MOVING_RIGHT:{
-                if(currentBody->pos.x + 1 < 20)
-                    currentBody->pos.x++;
+                if(game->snake[i].pos.x + 1 < 20)
+                    game->snake[i].pos.x++;
                 break;
             }
             case MOVING_LEFT: {
-                if (currentBody->pos.x - 1 >= 0)
-                    currentBody->pos.x--;
+                if (game->snake[i].pos.x - 1 >= 0)
+                    game->snake[i].pos.x--;
                 break;
             }
             case MOVING_DOWN: {
-                if (currentBody->pos.y + 1 < 20)
-                    currentBody->pos.y++;
+                if (game->snake[i].pos.y + 1 < 20)
+                    game->snake[i].pos.y++;
                 break;
             }
             case MOVING_UP: {
-                if (currentBody->pos.y - 1 >= 0)
-                    currentBody->pos.y--;
+                if (game->snake[i].pos.y - 1 >= 0)
+                    game->snake[i].pos.y--;
                 break;
             }
             default: {
                 break;
             }
         }
-        currentBody = currentBody->nextBody;
     }
     
 }
@@ -97,7 +93,7 @@ bool isSnakeMovementAllowed(Game *game){
 }
 
 bool hasSnakeCollidedFood(Game *game){
-    return game->snake.pos.x == game->food.x && game->snake.pos.y == game->food.y;
+    return game->snake[0].pos.x == game->food.x && game->snake[0].pos.y == game->food.y;
 }
 
 void updateGameAfterCollision(Game *game){
@@ -107,15 +103,10 @@ void updateGameAfterCollision(Game *game){
     if (game->gameSpeed -= STEP_SNAKE_MOVEMENT >= MIN_SNAKE_MOVEMENT)
         game->gameSpeed -= STEP_SNAKE_MOVEMENT;
 
-    struct Snake *currentBody = &(game->snake);
-    while (currentBody->nextBody){
-        currentBody = currentBody->nextBody;
-    }
+    int newBodyX = game->snake[game->snakeLength-1].pos.x;
+    int newBodyY = game->snake[game->snakeLength-1].pos.y;
 
-    int newBodyX = currentBody->pos.x;
-    int newBodyY = currentBody->pos.y;
-
-    switch(currentBody->state){
+    switch(game->snake[game->snakeLength-1].state){
         case MOVING_RIGHT:{
             newBodyX --;
             break;
@@ -137,6 +128,7 @@ void updateGameAfterCollision(Game *game){
         }
     }
     Pos newPos = {newBodyX, newBodyY};
-    struct Snake newBody = {newPos, currentBody->state, NULL};
-    currentBody->nextBody = &newBody;
+    struct Snake newBody = {newPos, game->snake[game->snakeLength - 1].state};
+    game->snake[game->snakeLength] = newBody;
+    game->snakeLength++;
 }

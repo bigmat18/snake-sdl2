@@ -14,4 +14,6 @@
 #define MIN_SNAKE_MOVEMENT 0.06
 #define STEP_SNAKE_MOVEMENT 0.02
 
+#define MAX_SNAKE_LENGTH 40
+
 #endif

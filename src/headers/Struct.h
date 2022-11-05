@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include "Constants.h"
 
 #ifndef STRUCT_H
 #define STRUCT_H
@@ -11,24 +12,21 @@ typedef enum{
     MOVING_DOWN,
 } State;
 
-typedef struct
-{
+typedef struct {
     int x;
     int y;
 } Pos, Food;
 
-struct Snake
-{
+struct Snake {
     Pos pos;
     State state;
-    struct Snake *nextBody;
 };
 
-typedef struct
-{
+typedef struct {
     Food food;
     bool quit;
-    struct Snake snake;
+    struct Snake snake[MAX_SNAKE_LENGTH];
+    int snakeLength;
     double gameSpeed;
     int score;
 } Game;

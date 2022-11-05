@@ -18,11 +18,8 @@ void renderFood(SDL_Renderer *renderer, Game *game){
 }
 
 void renderSnake(SDL_Renderer *renderer, Game *game){
-    struct Snake *currentBody = &(game->snake);
-    while(currentBody){
-        renderSquare(renderer, currentBody->pos, 0, 255, 0, 255);
-        currentBody = currentBody->nextBody;
-    }
+    for(int i=0; i<game->snakeLength; i++)
+        renderSquare(renderer, game->snake[i].pos, 0, 255, 0, 255);
 }
 
 void renderSquare(SDL_Renderer *renderer, Pos position, Uint8 r, Uint8 g, Uint8 b, Uint8 a){

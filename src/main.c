@@ -10,7 +10,7 @@
 
 Game GAME = {false};
 
-// ------------------------
+
 int main(void){
     srand(time(NULL));
     SDL_Init(SDL_INIT_VIDEO);

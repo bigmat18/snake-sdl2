@@ -29,15 +29,12 @@ Pos getRandomBoardPosition(Game *game){
 
         if(pos.x == game->food.x && pos.y == game->food.y) posFree = false;
         else posFree = true;
-        
-        struct Snake *currentBody = &(game->snake);
-        while(posFree && currentBody){
 
-            if (currentBody->pos.x == pos.x && currentBody->pos.y == pos.y)
+        for(int i=0; i<game->snakeLength && posFree; i++){
+            if (game->snake[i].pos.x == pos.x && game->snake[i].pos.y == pos.y)
                 posFree = false;
-
-            currentBody = currentBody->nextBody;
         }
+        
     }while(!posFree);
 
     return pos;
