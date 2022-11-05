@@ -35,28 +35,36 @@ void setSnakeState(Game *game, State newState) {
     }
 }
 
-void updateSnakePosition(Game *game) {
+void updateSnakePosition(Game *game, bool manual) {
+    if(!isSnakeMovementAllowed(game, manual))
+        return;
+
+    if(!manual) setSnakeState(game, game->snake[0].state);    
 
     for(int i=0; i<game->snakeLength; i++){
         switch(game->snake[i].state){
             case MOVING_RIGHT:{
-                if(game->snake[i].pos.x + 1 < 20)
+                if(game->snake[i].pos.x + 1 < BOARD_WIDTH)
                     game->snake[i].pos.x++;
+                else game->snake[i].pos.x = 0;
                 break;
             }
             case MOVING_LEFT: {
                 if (game->snake[i].pos.x - 1 >= 0)
                     game->snake[i].pos.x--;
+                else game->snake[i].pos.x = BOARD_WIDTH;
                 break;
             }
             case MOVING_DOWN: {
-                if (game->snake[i].pos.y + 1 < 20)
+                if (game->snake[i].pos.y + 1 < BOARD_WIDTH)
                     game->snake[i].pos.y++;
+                else game->snake[i].pos.y = 0;
                 break;
             }
             case MOVING_UP: {
                 if (game->snake[i].pos.y - 1 >= 0)
                     game->snake[i].pos.y--;
+                else game->snake[i].pos.y = BOARD_HEIGHT;
                 break;
             }
             default: {
@@ -67,7 +75,9 @@ void updateSnakePosition(Game *game) {
     
 }
 
-bool isSnakeMovementAllowed(Game *game){
+bool isSnakeMovementAllowed(Game *game, bool manual){
+    if(manual) return true;
+
     static struct timeval oldTime = {0};
     static struct timeval newTime = {0};
     static bool init = false;

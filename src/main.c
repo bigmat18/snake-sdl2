@@ -20,10 +20,13 @@ int main(void){
 
     initGame(&GAME);
 
+    bool manual = false;
+
     while (!GAME.quit){
 
         // Event handling
         SDL_Event event;
+        manual = false;
 
         if(SDL_PollEvent(&event)){
             
@@ -34,18 +37,22 @@ int main(void){
                 switch(event.key.keysym.scancode){
                     case SDL_SCANCODE_UP: {
                         setSnakeState(&GAME, MOVING_UP);
+                        manual = true;
                         break;
                     }
                     case SDL_SCANCODE_DOWN: {
                         setSnakeState(&GAME, MOVING_DOWN);
+                        manual = true;
                         break;
                     }
                     case SDL_SCANCODE_LEFT: {
                         setSnakeState(&GAME, MOVING_LEFT);
+                        manual = true;
                         break;
                     }
                     case SDL_SCANCODE_RIGHT: {
                         setSnakeState(&GAME, MOVING_RIGHT);
+                        manual = true;
                         break;
                     }
                     default: {
@@ -54,12 +61,12 @@ int main(void){
                 }
             }
         }
-        if(isSnakeMovementAllowed(&GAME))
-            updateSnakePosition(&GAME);
+
+        updateSnakePosition(&GAME, manual);
 
         if(hasSnakeCollidedFood(&GAME))
             updateGameAfterCollision(&GAME);
-
+            
         renderGame(renderer, &GAME);
     }
 

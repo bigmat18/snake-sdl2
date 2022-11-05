@@ -41,8 +41,8 @@ Pos getRandomBoardPosition(Game *game){
 }
 
 Pos getRandomPosition(){
-    int x = getRandomInt(0, BOARD_WIDTH);
-    int y = getRandomInt(0, BOARD_HEIGHT);
+    int x = getRandomInt(1, BOARD_WIDTH-1);
+    int y = getRandomInt(1, BOARD_HEIGHT-1);
 
     Pos newPosition = {x, y};
     return newPosition;

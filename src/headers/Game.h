@@ -9,8 +9,8 @@ void initSnake(Game *game);
 void initFood(Game *game);
 
 void setSnakeState(Game *game, State newState);
-void updateSnakePosition(Game *game);
-bool isSnakeMovementAllowed(Game *game);
+void updateSnakePosition(Game *game, bool manual);
+bool isSnakeMovementAllowed(Game *game, bool manual);
 
 bool hasSnakeCollidedFood(Game *game);
 void updateGameAfterCollision(Game *game);
