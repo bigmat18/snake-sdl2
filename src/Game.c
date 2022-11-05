@@ -142,3 +142,13 @@ void updateGameAfterCollision(Game *game){
     game->snake[game->snakeLength] = newBody;
     game->snakeLength++;
 }
+
+bool hasSnakeCollidedHimSelf(Game *game){
+    for(int i=1; i<game->snakeLength; i++){
+        if (game->snake[i].pos.x == game->snake[0].pos.x && 
+            game->snake[i].pos.y == game->snake[0].pos.y)
+            return true;
+    }
+
+    return false;
+}

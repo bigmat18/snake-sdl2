@@ -36,23 +36,31 @@ int main(void){
             if(event.type == SDL_KEYDOWN){
                 switch(event.key.keysym.scancode){
                     case SDL_SCANCODE_UP: {
-                        setSnakeState(&GAME, MOVING_UP);
-                        manual = true;
+                        if (GAME.snake[0].state != MOVING_DOWN){
+                            setSnakeState(&GAME, MOVING_UP);
+                            manual = true;
+                        }
                         break;
                     }
                     case SDL_SCANCODE_DOWN: {
-                        setSnakeState(&GAME, MOVING_DOWN);
-                        manual = true;
+                        if (GAME.snake[0].state != MOVING_UP){
+                            setSnakeState(&GAME, MOVING_DOWN);
+                            manual = true;
+                        }
                         break;
                     }
                     case SDL_SCANCODE_LEFT: {
-                        setSnakeState(&GAME, MOVING_LEFT);
-                        manual = true;
+                        if (GAME.snake[0].state != MOVING_RIGHT){
+                            setSnakeState(&GAME, MOVING_LEFT);
+                            manual = true;
+                        }
                         break;
                     }
                     case SDL_SCANCODE_RIGHT: {
-                        setSnakeState(&GAME, MOVING_RIGHT);
-                        manual = true;
+                        if (GAME.snake[0].state != MOVING_LEFT){
+                            setSnakeState(&GAME, MOVING_RIGHT);
+                            manual = true;
+                        }
                         break;
                     }
                     default: {
@@ -66,6 +74,8 @@ int main(void){
 
         if(hasSnakeCollidedFood(&GAME))
             updateGameAfterCollision(&GAME);
+
+        GAME.quit = hasSnakeCollidedHimSelf(&GAME);
             
         renderGame(renderer, &GAME);
     }

@@ -14,6 +14,7 @@ bool isSnakeMovementAllowed(Game *game, bool manual);
 
 bool hasSnakeCollidedFood(Game *game);
 void updateGameAfterCollision(Game *game);
+bool hasSnakeCollidedHimSelf(Game *game);
 
 #endif
 
