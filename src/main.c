@@ -1,5 +1,6 @@
-#include <stdio.h>   
+#include <stdio.h>
 #include <SDL2/SDL.h>
+#include <SDL_ttf.h>
 
 #include "headers/Constants.h"
 #include "headers/Struct.h"
@@ -13,10 +14,19 @@ Game GAME = {false};
 
 int main(void){
     srand(time(NULL));
-    SDL_Init(SDL_INIT_VIDEO);
 
+    // SDL init
+    SDL_Init(SDL_INIT_VIDEO);
     SDL_Window *const window = scp(SDL_CreateWindow("Snake Game", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE));
     SDL_Renderer *const renderer = scp(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
+
+    // TTF init
+    TTF_Init();
+    char *fontPath = "Aller_Rg.ttf";
+    TTF_Font *font = TTF_OpenFont(fontPath, 30);
+    if(!font) printf("Error loading font '%s': %s\n", fontPath, TTF_GetError());
+
+    GAME.font = font;
 
     initGame(&GAME);
 
@@ -80,5 +90,7 @@ int main(void){
         renderGame(renderer, &GAME);
     }
 
+    SDL_Quit();
+    TTF_Quit();
     return 0;
 }

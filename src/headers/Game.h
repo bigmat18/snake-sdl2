@@ -17,4 +17,3 @@ void updateGameAfterCollision(Game *game);
 bool hasSnakeCollidedHimSelf(Game *game);
 
 #endif
-

@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include "Constants.h"
+#include <SDL_ttf.h>
 
 #ifndef STRUCT_H
 #define STRUCT_H
@@ -29,6 +30,7 @@ typedef struct {
     int snakeLength;
     double gameSpeed;
     int score;
+    TTF_Font *font;
 } Game;
 
 #endif
