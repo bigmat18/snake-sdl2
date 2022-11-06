@@ -85,7 +85,7 @@ int main(void){
         if(hasSnakeCollidedFood(&GAME))
             updateGameAfterCollision(&GAME);
 
-        GAME.quit = hasSnakeCollidedHimSelf(&GAME);
+        GAME.quit = GAME.quit || hasSnakeCollidedHimSelf(&GAME);
             
         renderGame(renderer, &GAME);
     }
